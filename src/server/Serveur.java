@@ -1,4 +1,4 @@
-package TP7.serveur;
+package serveur;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

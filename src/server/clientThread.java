@@ -1,4 +1,4 @@
-package TP7.serveur;
+package serveur;
 
 import java.io.IOException;
 import java.io.PrintWriter;

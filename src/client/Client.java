@@ -1,4 +1,4 @@
-package TP7.client;
+package client;
 
 import java.net.Socket;
 import java.util.Scanner;
@@ -26,12 +26,12 @@ public class Client {
         }
     }
 
-    public EnvoieMessage(String message) {
+    public void sendMessage(String message) throws IOException{
         PrintWriter sendMess = new PrintWriter(clientSocket.getOutputStream(), true);
-        out.println(message);
+        sendMess.println(message);
     }
 
-    public RecevMessage() {
+    public void getMessage() throws IOException{
         BufferedReader in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
         System.out.println(in.readLine());
     }
