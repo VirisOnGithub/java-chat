@@ -1,4 +1,4 @@
 all: compile
 
 compile: 
-	javac -d bin src/*/*.java
+	javac src/*/*.java
