@@ -8,6 +8,7 @@ public class Serveur {
     private ServerSocket serverSocket;
     private int port = 1234;
     private Map<Socket, PrintWriter> clientMap = new HashMap<>();
+    private Map<Socket, String> clientNames = new HashMap<>();
     private Queue<Message> messages = new LinkedList<>();
 
     public Serveur() {
@@ -37,6 +38,8 @@ public class Serveur {
     private void readFromClient(Socket clientSocket) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            String clientName = in.readLine(); // Lire le nom du client
+            clientNames.put(clientSocket, clientName);
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 synchronized (messages) {
@@ -59,7 +62,7 @@ public class Serveur {
                     }
                     for (Map.Entry<Socket, PrintWriter> entry : clientMap.entrySet()) {
                         if (!entry.getKey().equals(message.getSender())) {
-                            entry.getValue().println(message.getText());
+                            entry.getValue().println(clientNames.get(message.getSender()) + " : " + message.getText());
                         }
                     }
                 }

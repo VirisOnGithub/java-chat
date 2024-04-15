@@ -19,6 +19,10 @@ public class Client {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
 
+            System.out.println("Enter your name: ");
+            String name = sc.nextLine();
+            out.println(name);
+
             Thread readThread = new Thread(this::readFromServer);
             Thread writeThread = new Thread(this::writeToServer);
             readThread.start();
