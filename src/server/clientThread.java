@@ -26,20 +26,21 @@ public class clientThread extends Thread {
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            String inputLine = in.readLine();
-            if (inputLine.equals("time")) {
-                out.println("Il est " + java.time.LocalTime.now());
-            } else if (inputLine.equals("date")) {
-                out.println("Nous sommes le " + java.time.LocalDate.now());
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                if (inputLine.equals("time")) {
+                    out.println("Il est " + java.time.LocalTime.now());
+                } else if (inputLine.equals("date")) {
+                    out.println("Nous sommes le " + java.time.LocalDate.now());
+                } else if (inputLine.equals("quit")) {
+                    out.println("Au revoir !");
+                    clientSocket.close();
+                    break;
+                } else {
+                    out.println("Commande inconnue");
+                }
+                System.out.println("Message reçu de " + clientSocket.hashCode() +" : " + inputLine);
             }
-            else if (inputLine.equals("quit")) {
-                out.println("Au revoir !");
-                clientSocket.close();
-            } 
-            else {
-                out.println("Commande inconnue");
-            }
-            System.out.println("Message reçu de " + clientSocket.hashCode() +" : " + inputLine);
         } catch (IOException e) {
             e.printStackTrace();
         }

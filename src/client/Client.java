@@ -9,40 +9,46 @@ import java.io.PrintWriter;
 public class Client {
     private Socket clientSocket;
     private boolean working = true;
+    private PrintWriter out;
+    private BufferedReader in;
+    private Scanner sc = new Scanner(System.in);
 
     public Client() {
-        while(working){
-                try {
-                clientSocket = new Socket("localhost", 1234);
+        try {
+            clientSocket = new Socket("localhost", 1234);
+            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
 
-                
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                Scanner sc = new Scanner(System.in);
-                if(sc.hasNextLine()){
-                    System.out.println("Enter a message : ");
-                    String message = sc.nextLine();
-                    if(message.equals("quit")){
-                        working = false;
-                    }
-                    out.println(message);
-                }
-                BufferedReader in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
-                System.out.println(in.readLine());
-                sc.close();
+            Thread readThread = new Thread(this::readFromServer);
+            Thread writeThread = new Thread(this::writeToServer);
+            readThread.start();
+            writeThread.start();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            readThread.join();
+            writeThread.join();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    public void sendMessage(String message) throws IOException{
-        PrintWriter sendMess = new PrintWriter(clientSocket.getOutputStream(), true);
-        sendMess.println(message);
+    private void readFromServer() {
+        try {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                System.out.println(inputLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void getMessage() throws IOException{
-        BufferedReader in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
-        System.out.println(in.readLine());
+    private void writeToServer() {
+        while(working){
+            if(sc.hasNextLine()){
+                String message = sc.nextLine();
+                out.println(message);
+            }
+        }
+        sc.close();
     }
 }
