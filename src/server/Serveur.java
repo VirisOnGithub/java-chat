@@ -15,11 +15,12 @@ public class Serveur {
     private int port = 1234;
 
     public Serveur() {
+        System.out.println("Serveur en attente de connexion");
         try {
             serverSocket = new ServerSocket(port);
             while (true) {
-                System.out.println("Serveur en attente de connexion");
                 clientSocket = serverSocket.accept();
+                System.out.println("Connexion établie avec " + clientSocket.hashCode());
                 Thread clientThread = new clientThread(clientSocket);
                 clientThread.start();
 

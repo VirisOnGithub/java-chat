@@ -39,7 +39,7 @@ public class clientThread extends Thread {
             else {
                 out.println("Commande inconnue");
             }
-            System.out.println("Message reçu : " + inputLine);
+            System.out.println("Message reçu de " + clientSocket.hashCode() +" : " + inputLine);
         } catch (IOException e) {
             e.printStackTrace();
         }
