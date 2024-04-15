@@ -2,15 +2,9 @@ package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.Buffer;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 
 public class clientThread extends Thread {
     private Socket clientSocket;
@@ -39,7 +33,7 @@ public class clientThread extends Thread {
                 } else {
                     out.println("Commande inconnue");
                 }
-                System.out.println("Message reçu de " + clientSocket.hashCode() +" : " + inputLine);
+                System.out.println("Message reçu de " + clientSocket.hashCode() + " : " + inputLine);
             }
         } catch (IOException e) {
             e.printStackTrace();
