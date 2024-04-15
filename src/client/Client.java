@@ -25,4 +25,14 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    public EnvoieMessage(String message) {
+        PrintWriter sendMess = new PrintWriter(clientSocket.getOutputStream(), true);
+        out.println(message);
+    }
+
+    public RecevMessage() {
+        BufferedReader in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
+        System.out.println(in.readLine());
+    }
 }
