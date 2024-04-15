@@ -8,21 +8,31 @@ import java.io.PrintWriter;
 
 public class Client {
     private Socket clientSocket;
+    private boolean working = true;
 
     public Client() {
-        try {
-            clientSocket = new Socket("localhost", 1234);
+        while(working){
+                try {
+                clientSocket = new Socket("localhost", 1234);
 
-            BufferedReader in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            Scanner sc = new Scanner(System.in);
-            String message = sc.nextLine();
-            out.println(message);
-            System.out.println(in.readLine());
-            sc.close();
+                
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                Scanner sc = new Scanner(System.in);
+                if(sc.hasNextLine()){
+                    System.out.println("Enter a message : ");
+                    String message = sc.nextLine();
+                    if(message.equals("quit")){
+                        working = false;
+                    }
+                    out.println(message);
+                }
+                BufferedReader in = new BufferedReader(new java.io.InputStreamReader(clientSocket.getInputStream()));
+                System.out.println(in.readLine());
+                sc.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

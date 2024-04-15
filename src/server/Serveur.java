@@ -1,35 +1,44 @@
 package server;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.Buffer;
-import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.HashMap;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Serveur {
     private ServerSocket serverSocket;
-    private Socket clientSocket;
     private int port = 1234;
-    private Map<Socket, String> nameMap = new HashMap<>();
+    private Map<Socket, PrintWriter> clientMap = new HashMap<>();
 
     public Serveur() {
         System.out.println("Serveur en attente de connexion");
         try {
             serverSocket = new ServerSocket(port);
             while (true) {
-                clientSocket = serverSocket.accept();
+                Socket clientSocket = serverSocket.accept();
                 System.out.println("Connexion établie avec " + clientSocket.hashCode());
-                nameMap.put(clientSocket, "Client " + clientSocket.hashCode());
-                Thread clientThread = new clientThread(clientSocket);
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                clientMap.put(clientSocket, out);
+                Thread clientThread = new Thread(() -> handleClient(clientSocket));
                 clientThread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void handleClient(Socket clientSocket) {
+        while (true) {
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    for (PrintWriter out : clientMap.values()) {
+                        out.println(inputLine);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
